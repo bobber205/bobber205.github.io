@@ -1,0 +1,52 @@
+.resumeContainer {
+	margin: 0 auto;
+	width: 700px;
+	height: auto;
+	min-height: 500px;
+}
+
+body > * {
+	/* Basic font style */
+	font-family: 'Sanchez', serif;
+	width: 700px;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+	padding-left: 50px;
+	padding-top: 10px;
+}
+
+.header {
+	font-size: 55px;
+	font-weight: 400;
+	text-align: center;
+}
+
+.subHeader {
+	text-align: center;
+}
+
+.resumeContainer {
+	padding: 25px 10px;
+}
+
+.sectionContent {
+	font-size: 14px;
+}
+
+.sectionHeader {
+	font-style: italic;
+	font-size: 25px;
+	margin-top: 20px;
+	border-bottom: 1px solid #BBB;
+	padding-bottom: 5px;
+}
+
+.companyText {
+	margin-left: 50px;
+	font-style: italic;
+	color: black;
+	font-size: 15px;
+}
