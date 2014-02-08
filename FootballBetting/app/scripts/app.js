@@ -4,7 +4,8 @@ angular.module('footballBettingApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'angular-underscore'
 ])
   .config(function ($routeProvider) {
     $routeProvider
