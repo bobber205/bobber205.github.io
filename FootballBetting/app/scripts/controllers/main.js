@@ -7,7 +7,7 @@ window.randomIndex = function() {
 	return result;
 }
 
-angular.module('footballBettingApp').controller('MainCtrl', function($scope, $timeout) {
+angular.module('footballBettingApp').controller('MainCtrl', ["$scope", "$timeout", function($scope, $timeout) {
 
 	//0 18
 	//1 8.9%
@@ -48,7 +48,6 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope, $ti
 
 	function doAlg(maxIterations, strategy) {
 		var wins = 0;
-		console.log("h", hawkScores, "b", broncoScores);
 
 		for (var i = 0; i < maxIterations; i++) {
 			var didGetBronco = false;
@@ -57,11 +56,9 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope, $ti
 			var rows = strategy();
 			var broncoScores = rows.broncoRow;
 			var hawkScores = rows.hawkRow;
-			// console.log(broncoScores, hawkScores);
 
 			var broncoResult = randomFootballResult();
 			var hawkResult = randomFootballResult();
-			// console.log(broncoResult, hawkResult);
 
 			_.each(broncoScores, function(score) {
 				if (score == broncoResult) didGetBronco = true;
@@ -70,10 +67,8 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope, $ti
 			_.each(hawkScores, function(score) {
 				if (score == hawkResult) didGetHawks = true;
 			});
-			console.log(didGetHawks, didGetBronco);
 			if (didGetHawks && didGetBronco) {
 				wins++;
-				// console.warn("WIN");
 			}
 		}
 		return wins;
@@ -98,8 +93,6 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope, $ti
 				hawkRow: two.splice(0, 5)
 			}
 		});
-		// console.log("wins!", wins);
-		// console.log("strat one won: " + (wins / maxIterations) * 100, " % of the time");
 		return wins / maxIterations;
 	}
 
@@ -120,21 +113,18 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope, $ti
 				hawkRow: twoFinal
 			}
 		});
-		// console.log("wins!", wins);
-		// console.log("strat two won: " + (wins / maxIterations) * 100, " % of the time");
 		return wins / maxIterations;
 	}
 	$scope.doneBets = false;
+	$scope.max = 2000;
 	$scope.status = "No Result Yet...";
 	$scope.doBets = function() {
-		var max = 2000;
+		$scope.doneBets = true;
 		$scope.status = "Running sim...";
-		$scope.maxIterations = max;
 		$timeout(function() {
-			$scope.oneResult = (strategyOne(max) * 100); //about 5%
-			$scope.twoResult = (strategyTwo(max) * 100); //about 25%
+			$scope.oneResult = (strategyOne($scope.max) * 100); //about 5%
+			$scope.twoResult = (strategyTwo($scope.max) * 100); //about 25%
 			$scope.doneBets = true;
 		}, 1);
 	}
-
-});
+}]);

@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<button ng-click="doBets()">Do Bets!</button>
-	<p>Iterations: {{maxIterations}}</p>
+	<div><label>Iterations: {{maxIterations}}<input ng-model="max" type="text"/></div>
 	<p ng-if="!doneBets">{{status}}</p>
  	<p ng-if="doneBets">Putting all in a straight line gives you a {{oneResult}}% chance of winning</p>
  	<p ng-if="doneBets">Putting all in a diagonal line so that no row or column in used twice gives you a {{twoResult}}% chance of winning</p>
