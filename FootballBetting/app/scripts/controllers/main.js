@@ -3,11 +3,11 @@
 var randomnumber = Math.floor(Math.random() * 11)
 
 window.randomIndex = function() {
-	var result =Math.floor(Math.random() * 9);
+	var result = Math.floor(Math.random() * 9);
 	return result;
 }
 
-angular.module('footballBettingApp').controller('MainCtrl', function($scope) {
+angular.module('footballBettingApp').controller('MainCtrl', function($scope, $timeout) {
 
 	//0 18
 	//1 8.9%
@@ -48,20 +48,20 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope) {
 
 	function doAlg(maxIterations, strategy) {
 		var wins = 0;
-		//console.log("h", hawkScores, "b", broncoScores);
+		console.log("h", hawkScores, "b", broncoScores);
 
 		for (var i = 0; i < maxIterations; i++) {
 			var didGetBronco = false;
 			var didGetHawks = false;
-			
+
 			var rows = strategy();
 			var broncoScores = rows.broncoRow;
 			var hawkScores = rows.hawkRow;
-			console.log(broncoScores, hawkScores);
+			// console.log(broncoScores, hawkScores);
 
 			var broncoResult = randomFootballResult();
 			var hawkResult = randomFootballResult();
-			console.log(broncoResult, hawkResult);
+			// console.log(broncoResult, hawkResult);
 
 			_.each(broncoScores, function(score) {
 				if (score == broncoResult) didGetBronco = true;
@@ -70,11 +70,11 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope) {
 			_.each(hawkScores, function(score) {
 				if (score == hawkResult) didGetHawks = true;
 			});
-			//console.log(didGetHawks, didGetBronco);
+			console.log(didGetHawks, didGetBronco);
 			if (didGetHawks && didGetBronco) {
 				wins++;
-				console.warn("WIN");	
-			} 
+				// console.warn("WIN");
+			}
 		}
 		return wins;
 	}
@@ -95,18 +95,18 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope) {
 
 			return {
 				broncoRow: oneFinal,
-				hawkRow: two.splice(0,5)
+				hawkRow: two.splice(0, 5)
 			}
 		});
-		console.log("wins!", wins);
-		console.log("strat one won: " + (wins / maxIterations) * 100, " % of the time");
+		// console.log("wins!", wins);
+		// console.log("strat one won: " + (wins / maxIterations) * 100, " % of the time");
 		return wins / maxIterations;
 	}
 
 	function strategyTwo(maxIterations) {
 		var wins = doAlg(maxIterations, function() {
 			var one = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].shuffle();
-			one = one.splice(0,5);
+			one = one.splice(0, 5);
 			var two = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].shuffle();
 
 			var oneFinal = [];
@@ -120,12 +120,21 @@ angular.module('footballBettingApp').controller('MainCtrl', function($scope) {
 				hawkRow: twoFinal
 			}
 		});
-		console.log("wins!", wins);
-		console.log("strat two won: " + (wins / maxIterations) * 100, " % of the time");
+		// console.log("wins!", wins);
+		// console.log("strat two won: " + (wins / maxIterations) * 100, " % of the time");
 		return wins / maxIterations;
 	}
-	var max = 2000;
-	strategyOne(max); //about 5%
-	strategyTwo(max);
-	performBet();
+	$scope.doneBets = false;
+	$scope.status = "No Result Yet...";
+	$scope.doBets = function() {
+		var max = 2000;
+		$scope.status = "Running sim...";
+		$scope.maxIterations = max;
+		$timeout(function() {
+			$scope.oneResult = (strategyOne(max) * 100); //about 5%
+			$scope.twoResult = (strategyTwo(max) * 100); //about 25%
+			$scope.doneBets = true;
+		}, 1);
+	}
+
 });
